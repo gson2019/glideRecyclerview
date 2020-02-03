@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.bubble.gliderecyclerview.ui.MainFragment"
+        android:name="com.example.bubble.gliderecyclerview.ui.main.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" >
         <action
@@ -16,12 +16,8 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.bubble.gliderecyclerview.ui.DetailFragment"
+        android:name="com.example.bubble.gliderecyclerview.ui.detail.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
-        <argument
-            android:name="monster"
-            app:argType="com.example.bubble.gliderecyclerview.model.Monster"
-            />
     </fragment>
 </navigation>

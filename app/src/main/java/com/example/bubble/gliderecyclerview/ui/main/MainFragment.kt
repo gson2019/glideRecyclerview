@@ -1,7 +1,6 @@
-package com.example.bubble.gliderecyclerview.ui
+package com.example.bubble.gliderecyclerview.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +10,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.bubble.gliderecyclerview.LOG_TAG
-import com.example.bubble.gliderecyclerview.viewmodel.MainViewModel
+import com.example.bubble.gliderecyclerview.viewmodel.SharedViewModel
 import com.example.bubble.gliderecyclerview.R
 import com.example.bubble.gliderecyclerview.model.Monster
 import kotlinx.android.synthetic.main.main_fragment.*
 
-class MainFragment : Fragment(), MonsterAdapter.MonsterItemListener {
-    private lateinit var viewModel: MainViewModel
+class MainFragment : Fragment(),
+    MonsterAdapter.MonsterItemListener {
+    private lateinit var viewModel: SharedViewModel
     private lateinit var navController: NavController
 
     override fun onCreateView(
@@ -39,22 +36,28 @@ class MainFragment : Fragment(), MonsterAdapter.MonsterItemListener {
         swipeLayout.setOnRefreshListener {
             viewModel.refreshData()
         }
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
 
         viewModel.monsterData.observe(this, Observer {
             val monsterNames = StringBuilder()
             for(monster in it){
                 monsterNames.append(monster.monsterName).append("\n")
             }
-            val adapter = MonsterAdapter(requireContext(), it, this)
+            val adapter =
+                MonsterAdapter(
+                    requireContext(),
+                    it,
+                    this
+                )
             monsterRv.adapter = adapter
             swipeLayout.isRefreshing = false
         })
     }
 
     override fun onMonsterItemClick(monster: Monster) {
-//        navController.navigate(R.id.nav_to_detail)
-//        findNavController()
-        navController.navigate(MainFragmentDirections.navToDetail(monster))
+//        viewModel.selectedMonster.value = monster
+        viewModel.selectedMonster = monster
+        navController.navigate(MainFragmentDirections.navToDetail())
+
     }
 }
